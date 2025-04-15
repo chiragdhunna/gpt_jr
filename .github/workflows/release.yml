@@ -48,6 +48,7 @@ jobs:
 
       - name: Build and distribute using Fastlane
         run: |
+          export PATH="$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH"
           cd android
           bundle install
           bundle exec fastlane firebase
