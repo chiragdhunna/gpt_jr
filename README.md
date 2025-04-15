@@ -6,11 +6,7 @@
 
 <h2>Demo</h2>
 
-
-
 https://github.com/chiragdhunna/GPT-Jr/assets/76210441/fe2b4377-884d-43d2-b6b5-3b1f3a7aaf66
-
-
 
 <h2>🧐 Features</h2>
 
@@ -33,6 +29,77 @@ Technologies used in the project:
 
 - [OpenAI ChatGPT API](https://beta.openai.com/)
 - [OpenAI DALL·E API](https://beta.openai.com/)
+
+## 🚀 CI/CD Automation ![CI/CD Status](https://img.shields.io/badge/CI%2FCD-Automated-brightgreen?style=flat-square&logo=githubactions)
+
+This project features a fully automated **CI/CD pipeline** powered by **GitHub Actions** and **Fastlane**, enabling seamless APK builds and distribution.
+
+### 🔧 How It Works
+
+- On every push to the `main` branch:
+  - ✅ The app is built using `flutter build apk --release`
+  - ✅ The release APK is distributed to testers via **Firebase App Distribution**
+  - ✅ A new **GitHub Release** is created automatically
+  - ✅ The signed `app-release.apk` is attached to the GitHub Release
+
+### 📦 Tools Used
+
+- **Fastlane**: Handles release builds and Firebase deployment via a custom lane.
+- **GitHub Actions**:
+  - Automates the entire build + release process
+  - Creates GitHub Releases with attached artifacts
+- **Firebase App Distribution**: Distributes APKs to internal testers instantly after every successful build.
+
+### 📁 GitHub Workflow Snapshot
+
+> The workflow is defined in `.github/workflows/build_and_release.yml`
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - Checkout code
+      - Set up Flutter & Java
+      - Decode signing keystore
+      - Build the release APK
+      - Upload APK to Firebase
+      - Create GitHub Release with APK attached
+```
+
+### 🧪 Firebase & GitHub Release Workflow in Action
+
+After pushing code to the `main` branch:
+
+1. **Fastlane** builds and signs the APK.
+2. The signed APK is uploaded to **Firebase App Distribution**, making it instantly available to your tester group.
+3. The same APK is attached to a new **GitHub Release**, tagged with the current workflow run number for version tracking.
+
+This ensures every production-ready APK is archived and distributed **without any manual steps**.
+
+---
+
+### 📂 Release Artifact Location
+
+- **Firebase Testers**: Receive the latest build via email or Firebase App Tester app.
+- **GitHub Releases**: Navigate to the [Releases tab](../../releases) to download the latest signed APK (`app-release.apk`).
+
+---
+
+### 🔐 Secrets Used
+
+These secrets are defined under your GitHub repository’s **Settings > Secrets and variables**:
+
+- `KEYSTORE_BASE64`: Base64-encoded keystore file for signing
+- `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`: Credentials for release signing
+- `FIREBASE_CLI_TOKEN`: Firebase CI auth token
+- `FASTLANE_FIREBASE_APP_ID`: Firebase App Distribution App ID
+- `GITHUB_TOKEN`: Built-in token used for creating releases and uploading artifacts
 
 <h2>Getting Started</h2>
 
