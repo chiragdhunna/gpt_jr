@@ -39,6 +39,12 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/key.jks
 
+      - name: Install Ruby and Bundler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby-full
+          gem install bundler
+
       - name: Build and distribute using Fastlane
         run: |
           cd android
