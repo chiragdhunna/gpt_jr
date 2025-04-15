@@ -3,17 +3,14 @@ default_platform(:android)
 platform :android do
   desc "Build and distribute release APK to Firebase App Distribution"
   lane :firebase do
-    gradle(
-      task: "assemble",
-      build_type: "Release"
-    )
+    sh "flutter build apk --release"
 
     firebase_app_distribution(
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
       app: ENV["FASTLANE_FIREBASE_APP_ID"],
-      apk_path: "build/outputs/apk/release/app-release.apk",  # <-- updated path
+      apk_path: "build/app/outputs/flutter-apk/app-release.apk",  # ← Confirmed working path
       groups: "testers",
-      release_notes: "Automated build from GitHub Actions"
+      release_notes: "Automated build from GitHub Actions 🚀"
     )
   end
 end
