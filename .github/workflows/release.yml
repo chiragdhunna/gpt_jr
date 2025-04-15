@@ -44,11 +44,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ruby-full
           gem install bundler --user-install
-          echo 'export PATH="$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH"' >> $GITHUB_ENV
+          echo 'export PATH="$HOME/.local/share/gem/ruby/$(ruby -e "puts RUBY_VERSION")/bin:$PATH"' >> $GITHUB_ENV
 
       - name: Build and distribute using Fastlane
         run: |
-          export PATH="$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH"
+          export PATH="$HOME/.local/share/gem/ruby/$(ruby -e 'print RUBY_VERSION')/bin:$PATH"
           cd android
+          bundle config set --local path vendor/bundle
           bundle install
           bundle exec fastlane firebase
