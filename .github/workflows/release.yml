@@ -45,6 +45,7 @@ jobs:
           sudo apt-get install -y ruby-full
           gem install bundler --user-install
           echo 'export PATH="$HOME/.local/share/gem/ruby/$(ruby -e "puts RUBY_VERSION")/bin:$PATH"' >> $GITHUB_ENV
+          export PATH="$HOME/.local/share/gem/ruby/$(ruby -e 'print RUBY_VERSION')/bin:$PATH"
 
       - name: Build and distribute using Fastlane
         run: |
