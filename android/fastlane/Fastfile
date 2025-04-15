@@ -8,9 +8,10 @@ platform :android do
       build_type: "Release"
     )
 
-    app_distribution(
+    firebase_app_distribution(
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
       app: ENV["FASTLANE_FIREBASE_APP_ID"],
+      apk_path: "build/app/outputs/flutter-apk/app-release.apk", 
       groups: "testers",
       release_notes: "Automated build from GitHub Actions"
     )
