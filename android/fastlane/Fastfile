@@ -11,7 +11,7 @@ platform :android do
     firebase_app_distribution(
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
       app: ENV["FASTLANE_FIREBASE_APP_ID"],
-      apk_path: "app/build/outputs/apk/release/app-release.apk",  # <- GRADLE's actual output
+      apk_path: "build/outputs/apk/release/app-release.apk",  # <-- updated path
       groups: "testers",
       release_notes: "Automated build from GitHub Actions"
     )
