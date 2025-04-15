@@ -1,0 +1,18 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build and distribute release APK to Firebase App Distribution"
+  lane :firebase do
+    gradle(
+      task: "assemble",
+      build_type: "Release"
+    )
+
+    app_distribution(
+      firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
+      app: ENV["FASTLANE_FIREBASE_APP_ID"],
+      groups: "testers",
+      release_notes: "Automated build from GitHub Actions"
+    )
+  end
+end
