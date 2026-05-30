@@ -98,7 +98,8 @@ These secrets are defined under your GitHub repository’s **Settings > Secrets 
 
 - `KEYSTORE_BASE64`: Base64-encoded keystore file for signing
 - `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`: Credentials for release signing
-- `FIREBASE_CLI_TOKEN`: Firebase CI auth token
+- `FIREBASE_SERVICE_ACCOUNT_JSON_B64` (recommended): Base64-encoded Firebase service account JSON for App Distribution auth
+- `FIREBASE_CLI_TOKEN` (legacy fallback): Firebase CI auth token
 - `FASTLANE_FIREBASE_APP_ID`: Firebase App Distribution App ID
 - `GITHUB_TOKEN`: Built-in token used for creating releases and uploading artifacts
 

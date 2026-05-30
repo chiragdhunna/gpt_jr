@@ -43,6 +43,12 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/key.jks
 
+      - name: Decode Firebase service account (optional)
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_B64 != '' }}
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_B64 }}" | base64 --decode > "$RUNNER_TEMP/firebase_service_account.json"
+          echo "FIREBASE_SERVICE_CREDENTIALS_FILE=$RUNNER_TEMP/firebase_service_account.json" >> "$GITHUB_ENV"
+
       - name: Install Ruby and Bundler
         run: |
           sudo apt-get update

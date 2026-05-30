@@ -5,12 +5,19 @@ platform :android do
   lane :firebase do
     sh "flutter build apk --release"
 
-    firebase_app_distribution(
-      firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
+    firebase_distribution_options = {
       app: ENV["FASTLANE_FIREBASE_APP_ID"],
-      apk_path: "../build/app/outputs/flutter-apk/app-release.apk", # ← ✅ FIXED
+      apk_path: "../build/app/outputs/flutter-apk/app-release.apk",
       groups: "testers",
       release_notes: "Automated build from GitHub Actions 🚀"
-    )
+    }
+
+    if ENV["FIREBASE_SERVICE_CREDENTIALS_FILE"].to_s.strip != ""
+      firebase_distribution_options[:service_credentials_file] = ENV["FIREBASE_SERVICE_CREDENTIALS_FILE"]
+    else
+      firebase_distribution_options[:firebase_cli_token] = ENV["FIREBASE_CLI_TOKEN"]
+    end
+
+    firebase_app_distribution(**firebase_distribution_options)
   end
 end
