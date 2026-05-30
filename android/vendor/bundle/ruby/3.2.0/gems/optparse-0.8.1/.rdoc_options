@@ -1,0 +1,5 @@
+---
+page_dir: doc
+main_page: README.md
+title: Documentation for OptionParser
+op_dir: rdoc

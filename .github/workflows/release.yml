@@ -45,38 +45,40 @@ jobs:
 
       - name: Decode Firebase service account (optional)
         run: |
+          firebase_credentials_file="${RUNNER_TEMP}/firebase_service_account.json"
+          firebase_credentials_json='${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}'
           firebase_credentials_b64='${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_B64 }}'
-          if [ -n "$firebase_credentials_b64" ]; then
-            firebase_credentials_file="${RUNNER_TEMP}/firebase_service_account.json"
+          if [ -n "$firebase_credentials_json" ]; then
+            printf '%s' "$firebase_credentials_json" > "$firebase_credentials_file"
+          elif [ -n "$firebase_credentials_b64" ]; then
             if ! printf '%s' "$firebase_credentials_b64" | base64 --decode > "$firebase_credentials_file"; then
               rm -f "$firebase_credentials_file"
               echo "::warning::FIREBASE_SERVICE_ACCOUNT_JSON_B64 could not be base64-decoded. Falling back to FIREBASE_CLI_TOKEN if available."
-            elif [ ! -s "$firebase_credentials_file" ]; then
+            fi
+          fi
+
+          if [ -f "$firebase_credentials_file" ]; then
+            if [ ! -s "$firebase_credentials_file" ]; then
               rm -f "$firebase_credentials_file"
-              echo "::warning::FIREBASE_SERVICE_ACCOUNT_JSON_B64 decoded to an empty file. Falling back to FIREBASE_CLI_TOKEN if available."
+              echo "::warning::Firebase service account secret is empty. Falling back to FIREBASE_CLI_TOKEN if available."
             elif ! jq empty "$firebase_credentials_file" > /dev/null 2>&1; then
               rm -f "$firebase_credentials_file"
-              echo "::warning::FIREBASE_SERVICE_ACCOUNT_JSON_B64 decoded content is not valid JSON. Falling back to FIREBASE_CLI_TOKEN if available."
+              echo "::warning::Firebase service account secret is not valid JSON. Falling back to FIREBASE_CLI_TOKEN if available."
             else
               echo "FIREBASE_SERVICE_CREDENTIALS_FILE=$firebase_credentials_file" >> "$GITHUB_ENV"
             fi
           fi
 
-      - name: Install Ruby and Bundler
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ruby-full
-          gem install bundler --user-install
-          # Set the correct gem binary path
-          echo 'export PATH="$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH"' >> $GITHUB_ENV
-          export PATH="$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH"
+      - name: Setup Ruby and Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: android
 
       - name: Build and distribute using Fastlane
         run: |
-          export PATH="$HOME/.local/share/gem/ruby/3.2.0/bin:$PATH"
           cd android
-          bundle config set --local path vendor/bundle
-          bundle install
           bundle exec fastlane firebase
 
       - name: Upload APK to GitHub Release
