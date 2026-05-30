@@ -52,6 +52,7 @@ jobs:
               echo "FIREBASE_SERVICE_CREDENTIALS_FILE=$firebase_credentials_file" >> "$GITHUB_ENV"
             else
               rm -f "$firebase_credentials_file"
+              echo "::warning::FIREBASE_SERVICE_ACCOUNT_JSON_B64 is set but could not be decoded into a valid credentials file. Falling back to FIREBASE_CLI_TOKEN if available."
             fi
           fi
 
