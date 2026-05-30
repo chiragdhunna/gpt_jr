@@ -12,7 +12,7 @@ platform :android do
       release_notes: "Automated build from GitHub Actions 🚀"
     }
 
-    if ENV["FIREBASE_SERVICE_CREDENTIALS_FILE"].to_s.strip != ""
+    if !ENV["FIREBASE_SERVICE_CREDENTIALS_FILE"].to_s.empty?
       firebase_distribution_options[:service_credentials_file] = ENV["FIREBASE_SERVICE_CREDENTIALS_FILE"]
     else
       firebase_distribution_options[:firebase_cli_token] = ENV["FIREBASE_CLI_TOKEN"]
