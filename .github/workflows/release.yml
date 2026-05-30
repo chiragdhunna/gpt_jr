@@ -42,26 +42,25 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/key.jks
 
-      - name: Decode Firebase service account
+      - name: Write Firebase service account
         env:
-          FIREBASE_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_B64 }}
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
         run: |
           firebase_credentials_file="${RUNNER_TEMP}/firebase_service_account.json"
-
-          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON_B64" | base64 --decode > "$firebase_credentials_file"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$firebase_credentials_file"
 
           if [ ! -s "$firebase_credentials_file" ]; then
-            echo "::error::Service account JSON decoded to empty file. Check FIREBASE_SERVICE_ACCOUNT_JSON_B64 secret."
+            echo "::error::Service account JSON is empty. Check FIREBASE_SERVICE_ACCOUNT_JSON secret."
             exit 1
           fi
 
           if ! jq empty "$firebase_credentials_file" > /dev/null 2>&1; then
-            echo "::error::Decoded content is not valid JSON. Check FIREBASE_SERVICE_ACCOUNT_JSON_B64 secret."
+            echo "::error::Service account JSON is not valid JSON. Check FIREBASE_SERVICE_ACCOUNT_JSON secret."
             exit 1
           fi
 
           echo "FIREBASE_SERVICE_CREDENTIALS_FILE=$firebase_credentials_file" >> "$GITHUB_ENV"
-          echo "✅ Service account credentials decoded successfully."
+          echo "✅ Service account credentials written successfully."
 
       - name: Install Ruby and Bundler
         run: |
