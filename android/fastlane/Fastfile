@@ -12,10 +12,13 @@ platform :android do
       release_notes: "Automated build from GitHub Actions 🚀"
     }
 
-    unless ENV["FIREBASE_SERVICE_CREDENTIALS_FILE"].to_s.empty?
+    if !ENV["FIREBASE_SERVICE_CREDENTIALS_FILE"].to_s.empty?
       firebase_distribution_options[:service_credentials_file] = ENV["FIREBASE_SERVICE_CREDENTIALS_FILE"]
-    else
+    elsif !ENV["FIREBASE_CLI_TOKEN"].to_s.empty?
       firebase_distribution_options[:firebase_cli_token] = ENV["FIREBASE_CLI_TOKEN"]
+      firebase_distribution_options[:debug] = true
+    else
+      UI.user_error!("Missing Firebase credentials. Set FIREBASE_SERVICE_CREDENTIALS_FILE (recommended) or FIREBASE_CLI_TOKEN.")
     end
 
     firebase_app_distribution(**firebase_distribution_options)
