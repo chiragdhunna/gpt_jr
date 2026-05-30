@@ -36,7 +36,7 @@ This project features a fully automated **CI/CD pipeline** powered by **GitHub A
 
 ### 🔧 How It Works
 
-- On every push to the `main` branch:
+- On every push to the `main` branch, or when manually triggered with **workflow_dispatch**:
   - ✅ The app is built using `flutter build apk --release`
   - ✅ The release APK is distributed to testers via **Firebase App Distribution**
   - ✅ A new **GitHub Release** is created automatically
@@ -59,6 +59,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
